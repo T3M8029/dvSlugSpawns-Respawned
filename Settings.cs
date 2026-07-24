@@ -1,6 +1,6 @@
 ﻿using UnityModManagerNet;
 
-namespace dvSlugSpawns
+namespace dvSlugSpawnsMod
 {
     public class Settings : UnityModManager.ModSettings, IDrawable
     {
@@ -9,6 +9,9 @@ namespace dvSlugSpawns
 
         [Draw("Always spawn on occupied tracks (caution)")]
         public bool ForceOccupied = false;
+
+        [Draw("Maximum number of slugs present in the world", Min = 1,  Max = 255)]
+        public int MaxSlugsNum = 4;
 
         public override void Save(UnityModManager.ModEntry modEntry) {
             Save(this, modEntry);

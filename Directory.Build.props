@@ -1,0 +1,10 @@
+<Project>
+  <PropertyGroup>
+    <DvInstallDir>$([System.Environment]::GetEnvironmentVariable('ProgramFiles(x86)'))\Steam\steamapps\common\Derail Valley</DvInstallDir>
+    <ReferencePath>
+      $(DvInstallDir)\DerailValley_Data\Managed\;
+      $(DvInstallDir)\DerailValley_Data\Managed\UnityModManager\;
+    </ReferencePath>
+    <AssemblySearchPaths>$(AssemblySearchPaths);$(ReferencePath)</AssemblySearchPaths>
+  </PropertyGroup>
+</Project>

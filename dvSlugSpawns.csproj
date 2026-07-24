@@ -4,38 +4,121 @@
     <TargetFramework>net48</TargetFramework>
     <AssemblyName>dvSlugSpawnsMod</AssemblyName>
     <Description>Permanent Slug Spawns</Description>
-    <Version>1.1.0</Version>
+    <Version>2.0.0</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>12</LangVersion>
     <RootNamespace>dvSlugSpawnsMod</RootNamespace>
-    <ReferencePath>E:\Steam\steamapps\common\Derail Valley\DerailValley_Data\Managed</ReferencePath>
   </PropertyGroup>
-  
-  <PropertyGroup>
-    <AssemblySearchPaths>
-       $(AssemblySearchPaths);
-       $(ReferencePath);
-    </AssemblySearchPaths>
-  </PropertyGroup>
-  
+    
   <PropertyGroup>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
+  
   <ItemGroup>
-    <Reference Include="Assembly-CSharp" />
-    <Reference Include="DV.Simulation" />
-    <Reference Include="DV.ThingTypes" />
-    <Reference Include="DV.UI" />
-    <Reference Include="DV.Utils" />
-    <Reference Include="UnityEngine.UI" />
-    <Reference Include="UnityEngine.IMGUIModule" />
-    <Reference Include="UnityEngine" />
-    <Reference Include="UnityEngine.CoreModule" />
-
-    <PackageReference Include="UnityModManager" Version="0.27.2" />
+    <Compile Remove="build\**" />
+    <Compile Remove="dist\**" />
+    <EmbeddedResource Remove="build\**" />
+    <EmbeddedResource Remove="dist\**" />
+    <None Remove="build\**" />
+    <None Remove="dist\**" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Remove=".gitignore" />
+    <None Remove="Directory.Build.props" />
+    <None Remove="LICENSE" />
+    <None Remove="readme.md" />
+    <None Remove="repository.json" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="CommandTerminal">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DV.BrakeSystem">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DV.Common">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DV.PointSet">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DV.RailTrack">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DV.ThingTypes">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DV.Utils">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DV.UIFramework">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DV.OriginShiftInfo">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DV.UI">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DV.UserManagement">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityModManager">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="WorldStreamer">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="net.smkd.vector3d">
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+   
+  <Target Name="PostBuildCopyWithBackup" AfterTargets="Build">
+    <PropertyGroup>
+      <DeployDir>$(DvInstallDir)\Mods\dvSlugSpawns\</DeployDir>
+      <DeployDll>$(DeployDir)$(TargetFileName)</DeployDll>
+      <DeployPdb>$(DeployDir)$(TargetName).pdb</DeployPdb>
+      <BackupDll>$(DeployDll).OLD</BackupDll>
+    </PropertyGroup>
+    <!-- Backup existing DLL -->
+    <Move SourceFiles="$(DeployDll)" DestinationFiles="$(BackupDll)" Condition="Exists('$(DeployDll)')" />
+    <!-- Copy DLL -->
+    <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(DeployDll)" />
+    <!-- Copy PDB if present -->
+    <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFiles="$(DeployPdb)" Condition="Exists('$(TargetDir)$(TargetName).pdb')" />
+  </Target>
+  
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <!-- Copy to build folder -->
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="build/" />

@@ -1,8 +1,8 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace dvSlugSpawns
+namespace dvSlugSpawnsMod
 {
     internal class CsvConfig
     {
@@ -20,54 +20,73 @@ namespace dvSlugSpawns
         public static void ReadSpawns()
         {
             string configFilePath = Path.Combine(Main.ModEntry.Path, "slug_spawns.csv");
-            if (!File.Exists(configFilePath)) {
+            if (!File.Exists(configFilePath))
+            {
                 Main.ModEntry.Logger.Log($"config file not found, creating: {configFilePath}");
-                try {
-                    using (StreamWriter outputFile = new StreamWriter(configFilePath)) {
-                        foreach( string line in defaultConfigLines ) {
+                try
+                {
+                    using (StreamWriter outputFile = new StreamWriter(configFilePath))
+                    {
+                        foreach (string line in defaultConfigLines)
+                        {
                             outputFile.WriteLine(line);
                         }
                     }
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     Main.ModEntry.Logger.LogException("Failed to write config file", ex);
                     return;
                 }
             }
             slugSpawns.Clear();
             tryOccupiedTracks.Clear();
-            using (StreamReader reader = new StreamReader(configFilePath)) {
-                try {
-                    while (!reader.EndOfStream) {
+            using (StreamReader reader = new StreamReader(configFilePath))
+            {
+                try
+                {
+                    while (!reader.EndOfStream)
+                    {
                         string line = reader.ReadLine();
-                        if (line[0] == '#' || line.Trim().Length < 1) {
+                        if (line[0] == '#' || line.Trim().Length < 1)
+                        {
                             continue;
                         }
                         string[] cols = line.Split(',');
-                        if (cols.Length < 3 || cols[0].Length < 2 || cols[1].Length < 6 || cols[2].Length < 1) {
+                        if (cols.Length < 3 || cols[0].Length < 2 || cols[1].Length < 6 || cols[2].Length < 1)
+                        {
                             Main.ModEntry.Logger.Log($"ignoring config line: \"{line}\"");
                             continue;
                         }
                         string stationId = cols[0].Trim();
                         string trackName = cols[1].Trim();
-                        bool tryOccupied = (cols[2].Trim() == "1");
+                        bool tryOccupied = cols[2].Trim() == "1";
                         List<string> trackList = new();
-                        if (slugSpawns.ContainsKey(stationId)) {
+                        if (slugSpawns.ContainsKey(stationId))
+                        {
                             slugSpawns.TryGetValue(stationId, out trackList);
-                        } else {
+                        }
+                        else
+                        {
                             slugSpawns.Add(stationId, trackList);
                         }
-                        if (!trackList.Contains(trackName)) {
+                        if (!trackList.Contains(trackName))
+                        {
                             trackList.Add(trackName);
-                            if (tryOccupied) {
+                            if (tryOccupied)
+                            {
                                 tryOccupiedTracks.Add(trackName, tryOccupied);
                             }
                             Main.ModEntry.Logger.Log($"Added potential spawn: stationId:{stationId} trackName:{trackName} tryOccupied:{tryOccupied}");
                         }
                     }
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     Main.ModEntry.Logger.LogException("Failed to read config file", ex);
                 }
             }
         }
     }
 }
+*/
