@@ -17,6 +17,9 @@ namespace dvSlugSpawnsMod
             Save(this, modEntry);
         }
 
-        public void OnChange() { }
+        public void OnChange() 
+        {
+            //TrackConfig.Save();
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using System.Reflection;
+using UnityEngine;
 using UnityModManagerNet;
 using static UnityModManagerNet.UnityModManager;
 
@@ -24,11 +25,15 @@ namespace dvSlugSpawnsMod
         static void OnDrawGUI(UnityModManager.ModEntry entry)
         {
             Settings.Draw(entry);
+            GUILayout.Space(15);
+            TrackConfig.DrawGUI();
         }
 
         static void OnSaveGUI(UnityModManager.ModEntry entry)
         {
             Settings.Save(entry);
+            TrackConfig.Save();
+            TrackConfig.Load();
         }
 
         private static bool OnToggle(UnityModManager.ModEntry modEntry, bool active)
@@ -37,16 +42,13 @@ namespace dvSlugSpawnsMod
             if (active)
             {
                 harmony.PatchAll(Assembly.GetExecutingAssembly());
-                if (WorldStreamingInit.Instance && WorldStreamingInit.IsLoaded)
-                {
-                    if (!TrackConfig.Load()) modEntry.Logger.Error("Failed to load settings, defaults will be loaded");
-                }
-
+                if (!TrackConfig.Load()) modEntry.Logger.Error("Failed to load settings, defaults will be loaded");
                 WorldStreamingInit.LoadingFinished += OnLoadingFinished;
+                UnloadWatcher.UnloadRequested += TrackConfig.Save;
             }
             else
             {
-                TrackConfig.Save();
+                UnloadWatcher.UnloadRequested -= TrackConfig.Save;
                 WorldStreamingInit.LoadingFinished -= OnLoadingFinished;
                 harmony.UnpatchAll(modEntry.Info.Id);
             }

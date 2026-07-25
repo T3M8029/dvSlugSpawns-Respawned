@@ -93,6 +93,9 @@
     <Reference Include="UnityEngine.UI">
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="UnityModManager">
       <Private>False</Private>
     </Reference>

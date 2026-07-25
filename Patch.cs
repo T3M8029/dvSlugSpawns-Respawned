@@ -35,12 +35,23 @@ namespace dvSlugSpawnsMod
                 RailTrack[] tracks = SingletonBehaviour<RailTrackRegistryBase>.Instance.OrderedRailtracks;
                 foreach (var spawnRecord in stationSpawnTracks)
                 {
-                    if ((Main.Settings.MaxSlugsNum <= SingletonBehaviour<CarSpawner>.Instance.AllCars.Count(tc => tc.carType == TrainCarType.LocoDE6Slug)) || (!Main.Settings.ForceOccupied && (Random.Range(0f, 2f) > 1))) continue;
+                    if ((Main.Settings.MaxSlugsNum <= SingletonBehaviour<CarSpawner>.Instance.AllCars.Count(tc => tc.carType == TrainCarType.LocoDE6Slug)) || (!Main.Settings.ForceOccupied && (Random.Range(0f, 2f) > 1)))
+                    {
+                        Main.ModEntry.Logger.Log($"Not spawning at {spawnRecord.TrackID}");
+                        continue;
+                    }
+
                     RailTrack? spawnTrack = tracks[spawnRecord.OrderedRailTrackArrIndex];
                     if (spawnTrack == null) continue;
                     Track logicTrack = spawnTrack.LogicTrack();
-                    if ((!spawnRecord.TryOccupied && !Main.Settings.ForceOccupied && !logicTrack.IsFree()) || (logicTrack.length - logicTrack.OccupiedLength - 20f) < slugLength) continue;
-                    if (SpawnCarAtBufferStop(spawnTrack, slugLivery!) != null) Main.ModEntry.Logger.Log($"Slug spawned at {spawnTrack} (forced:{Main.Settings.ForceSpawn})");
+                    if ((!spawnRecord.TryOccupied && !Main.Settings.ForceOccupied && !logicTrack.IsFree()) || ((logicTrack.length - logicTrack.OccupiedLength - 4f) < slugLength) || logicTrack.GetCarsFullyOnTrack().Exists(c => CarTypes.IsSlug(c.carType)) || logicTrack.GetCarsPartiallyOnTrack().Exists(c => CarTypes.IsSlug(c.carType)))
+                    {
+                        Main.ModEntry.Logger.Log($"Not enough space to spawn slug (or one already present) at {spawnRecord.TrackID}");
+                        continue;
+                    }
+                    yield return null;
+
+                    if (SpawnCarAtBufferStop(spawnTrack, slugLivery!) != null) Debug.Log($"[dvSlugSpawns] Slug spawned at {spawnTrack} (force occupied: {Main.Settings.ForceOccupied})");
                     yield return null;
                 }
             }
